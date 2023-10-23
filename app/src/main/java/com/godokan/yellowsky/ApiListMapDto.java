@@ -18,4 +18,32 @@ public class ApiListMapDto {
         this.address = address;
         this.placeUrl = placeUrl;
     }
+
+    public Integer getNo() {
+        return no;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProperName() {
+        return properName;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPlaceUrl() {
+        return placeUrl;
+    }
 }

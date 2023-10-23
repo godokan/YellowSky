@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarkerInfoTask {
-    public static List<ApiListMapDto> getMarkerInfo() {
+    public List<ApiListMapDto> getMarkerInfo() {
         String result = null;
         ApiListMapDto mapDto;
         List<ApiListMapDto> markers = new ArrayList<>();
         try {
-            URL url = new URL("http://ccsyasu.cafe24.com/api/map");
+            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             InputStream is = conn.getInputStream();
@@ -43,8 +43,7 @@ public class MarkerInfoTask {
         if (result == null) return null;
 
         try {
-            JSONObject jObject = new JSONObject(result);
-            JSONArray jArray = jObject.getJSONArray("");
+            JSONArray jArray = new JSONArray(result);
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject obj = jArray.getJSONObject(i);
                 mapDto = new ApiListMapDto(obj.getInt("no"),obj.getString("name"),obj.getString("properName"),obj.getDouble("lat"),obj.getDouble("lng"),obj.getString("address"),obj.getString("placeUrl"));

@@ -18,6 +18,12 @@
         <meta-data
             android:name="com.kakao.vectormap.APP_KEY"
             android:value="be728aa7784abbf60365dd721e51bf23"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDZJ4MhPqpCh4eyvpWOEAdzHJY95iTQN0o" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

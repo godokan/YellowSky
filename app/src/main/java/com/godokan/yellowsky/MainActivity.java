@@ -1,80 +1,75 @@
 package com.godokan.yellowsky;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.kakao.vectormap.KakaoMap;
-import com.kakao.vectormap.KakaoMapReadyCallback;
-import com.kakao.vectormap.LatLng;
-import com.kakao.vectormap.MapLifeCycleCallback;
-import com.kakao.vectormap.MapType;
-import com.kakao.vectormap.MapView;
-import com.kakao.vectormap.MapViewInfo;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
+
+    private MarkerInfoTask infoTask = new MarkerInfoTask();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        List<ApiListMapDto> markers = MarkerInfoTask.getMarkerInfo();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        assert mapFragment != null;
+        mapFragment.getMapAsync((OnMapReadyCallback) this);
+    }
 
-        MapView mapView = findViewById(R.id.map_view);
-        mapView.start(new MapLifeCycleCallback() {
-            @Override
-            public void onMapDestroy() {
-                // 지도 API 가 정상적으로 종료될 때 호출됨
-            }
+    // NULL이 아닌 GoogleMap 객체를 파라미터로 제공해 줄 수 있을 때 호출
+    @Override
+    public void onMapReady(@NonNull final GoogleMap googleMap) {
+        mMap = googleMap;
+        List<ApiListMapDto> list;
+        InitNetMapList mapList = new InitNetMapList();
 
-            @Override
-            public void onMapError(Exception error) {
-                // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
-            }
-        }, new KakaoMapReadyCallback() {
-            @Override
-            public void onMapReady(KakaoMap kakaoMap) {
-                // 인증 후 API 가 정상적으로 실행될 때 호출됨
-            }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2410864, 127.1775537), 11));
 
-            @Override
-            public LatLng getPosition() {
-                // 지도 시작 시 위치 좌표를 설정
-                return LatLng.from(37.406960, 127.115587);
-            }
+        mapList.start();
+        try {
+            mapList.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        list = mapList.getMarkers();
 
-            @Override
-            public int getZoomLevel() {
-                // 지도 시작 시 확대/축소 줌 레벨 설정
-                return 15;
-            }
+        System.out.println(list.get(0).getProperName()+" "+list.get(0).getNo());
 
-            @Override
-            public MapViewInfo getMapViewInfo() {
-                // 지도 시작 시 App 및 MapType 설정
-                return MapViewInfo.from(String.valueOf(MapType.NORMAL));
-            }
+        for (ApiListMapDto map : list) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(map.getLat(),map.getLng()))
+                    .title(map.getProperName())
+                    .snippet(map.getAddress())
+            );
+        }
 
-            @Override
-            public String getViewName() {
-                // KakaoMap 의 고유한 이름을 설정
-                return "MyFirstMap";
-            }
+    }
 
-            @Override
-            public boolean isVisible() {
-                // 지도 시작 시 visible 여부를 설정
-                return true;
-            }
+    class InitNetMapList extends Thread {
+        private List<ApiListMapDto> markers = new ArrayList<>();
+        @Override
+        public void run() {
+            markers = infoTask.getMarkerInfo();
+        }
 
-            @Override
-            public String getTag() {
-                // KakaoMap 의 tag 을 설정
-                return "FirstMapTag";
-            }
-        });
+        public List<ApiListMapDto> getMarkers() {
+            return markers;
+        }
     }
 }
