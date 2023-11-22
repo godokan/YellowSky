@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarkerInfoTask {
-    private final String KEY = "4/3+lEpDSOTWdUF27AsUcA==:3wjQz1b2tFVB/lWuuoYfhiIRaf0SdwHSFf2Tima5ILg=";
+    private final String KEY = "jPUXr41vcXxyiZvvOLL1JQ==:RGvYtuQPvozPR3dZL3zpKKThTN0x1CG1XPF6WcmUlDE=";
     private final String STUD_NUM = "202155012";
 
     public List<ApiListMapDto> getMarkerInfo() {
