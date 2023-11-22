@@ -15,14 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarkerInfoTask {
+    private final String KEY = "4/3+lEpDSOTWdUF27AsUcA==:3wjQz1b2tFVB/lWuuoYfhiIRaf0SdwHSFf2Tima5ILg=";
+    private final String STUD_NUM = "202155012";
+
     public List<ApiListMapDto> getMarkerInfo() {
         String result = null;
         ApiListMapDto mapDto;
         List<ApiListMapDto> markers = new ArrayList<>();
+
         try {
-            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map");
+            System.out.println("http://ccsyasu.cafe24.com:81/api/map?key="+KEY+"&studNum="+STUD_NUM);
+            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map?key="+KEY+"&studNum="+STUD_NUM);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-Type","application/json;charset=UTF-8");
             InputStream is = conn.getInputStream();
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
@@ -33,6 +39,7 @@ public class MarkerInfoTask {
 
             // Set the result
             result = builder.toString();
+            System.out.println(result);
         }
         catch (Exception e) {
             // Error calling the rest api
