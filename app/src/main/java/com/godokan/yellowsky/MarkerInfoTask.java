@@ -24,7 +24,6 @@ public class MarkerInfoTask {
         List<ApiListMapDTO> markers = new ArrayList<>();
 
         try {
-            System.out.println("http://ccsyasu.cafe24.com:81/api/map?key="+KEY+"&studNum="+STUD_NUM);
             URL url = new URL("http://ccsyasu.cafe24.com:81/api/map?key="+KEY+"&studNum="+STUD_NUM);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");

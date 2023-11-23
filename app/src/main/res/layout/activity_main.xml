@@ -35,5 +35,5 @@
         android:layout_height="wrap_content"
         android:text="@string/signup"
         android:textColor="#21bfb8"
-        android:id="@+id/ed_signup"/>
+        android:id="@+id/tv_signup"/>
 </LinearLayout>
