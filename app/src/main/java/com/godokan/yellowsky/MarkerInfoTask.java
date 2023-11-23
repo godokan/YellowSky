@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarkerInfoTask {
-    private final String KEY = "jPUXr41vcXxyiZvvOLL1JQ==:RGvYtuQPvozPR3dZL3zpKKThTN0x1CG1XPF6WcmUlDE=";
-    private final String STUD_NUM = "202155012";
 
     public List<ApiListMapDTO> getMarkerInfo() {
         String result = null;
         ApiListMapDTO mapDto;
         List<ApiListMapDTO> markers = new ArrayList<>();
+        String KEY = "jPUXr41vcXxyiZvvOLL1JQ==:RGvYtuQPvozPR3dZL3zpKKThTN0x1CG1XPF6WcmUlDE=";
+        String STUD_NUM = "202155012";
 
         try {
-            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map?key="+KEY+"&studNum="+STUD_NUM);
+            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map?key="+ KEY +"&studNum="+ STUD_NUM);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Content-Type","application/json;charset=UTF-8");
