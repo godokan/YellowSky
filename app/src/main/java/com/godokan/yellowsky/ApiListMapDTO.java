@@ -1,6 +1,6 @@
 package com.godokan.yellowsky;
 
-public class ApiListMapDto {
+public class ApiListMapDTO {
     private Integer no;
     private String name;
     private String properName;
@@ -9,7 +9,7 @@ public class ApiListMapDto {
     private String address;
     private String placeUrl;
 
-    public ApiListMapDto(Integer no, String name, String properName, Double lat, Double lng, String address, String placeUrl) {
+    public ApiListMapDTO(Integer no, String name, String properName, Double lat, Double lng, String address, String placeUrl) {
         this.no = no;
         this.name = name;
         this.properName = properName;

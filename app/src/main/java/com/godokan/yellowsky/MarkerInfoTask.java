@@ -18,10 +18,10 @@ public class MarkerInfoTask {
     private final String KEY = "jPUXr41vcXxyiZvvOLL1JQ==:RGvYtuQPvozPR3dZL3zpKKThTN0x1CG1XPF6WcmUlDE=";
     private final String STUD_NUM = "202155012";
 
-    public List<ApiListMapDto> getMarkerInfo() {
+    public List<ApiListMapDTO> getMarkerInfo() {
         String result = null;
-        ApiListMapDto mapDto;
-        List<ApiListMapDto> markers = new ArrayList<>();
+        ApiListMapDTO mapDto;
+        List<ApiListMapDTO> markers = new ArrayList<>();
 
         try {
             System.out.println("http://ccsyasu.cafe24.com:81/api/map?key="+KEY+"&studNum="+STUD_NUM);
@@ -53,7 +53,7 @@ public class MarkerInfoTask {
             JSONArray jArray = new JSONArray(result);
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject obj = jArray.getJSONObject(i);
-                mapDto = new ApiListMapDto(obj.getInt("no"),obj.getString("name"),obj.getString("properName"),obj.getDouble("lat"),obj.getDouble("lng"),obj.getString("address"),obj.getString("placeUrl"));
+                mapDto = new ApiListMapDTO(obj.getInt("no"),obj.getString("name"),obj.getString("properName"),obj.getDouble("lat"),obj.getDouble("lng"),obj.getString("address"),obj.getString("placeUrl"));
                 markers.add(mapDto);
             }
         } catch (Exception e) {

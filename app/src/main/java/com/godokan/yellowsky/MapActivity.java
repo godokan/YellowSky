@@ -34,7 +34,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull final GoogleMap googleMap) {
         mMap = googleMap;
-        List<ApiListMapDto> list;
+        List<ApiListMapDTO> list;
         InitNetMapList mapList = new InitNetMapList();
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2410864, 127.1775537), 11));
@@ -48,7 +48,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         list = mapList.getMarkers();
 
         if(list!=null) {
-            for (ApiListMapDto map : list) {
+            for (ApiListMapDTO map : list) {
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(map.getLat(),map.getLng()))
                         .title(map.getProperName())
@@ -60,13 +60,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private class InitNetMapList extends Thread {
-        private List<ApiListMapDto> markers = new ArrayList<>();
+        private List<ApiListMapDTO> markers = new ArrayList<>();
         @Override
         public void run() {
             markers = infoTask.getMarkerInfo();
         }
 
-        public List<ApiListMapDto> getMarkers() {
+        public List<ApiListMapDTO> getMarkers() {
             return markers;
         }
     }
