@@ -32,6 +32,11 @@ public class MemberTask {
             // Set the result
             result = builder.toString();
 
+            reader.close();
+            builder.setLength(0);
+            is.close();
+            conn.disconnect();
+
         } catch (Exception e) {
             Log.e("YELLOW_SKY_REST_API", "POST method failed: " + e.getMessage());
             e.printStackTrace();
@@ -71,6 +76,11 @@ public class MemberTask {
             // Set the result
             result = builder.toString();
 
+            reader.close();
+            builder.setLength(0);
+            is.close();
+            conn.disconnect();
+
         } catch (Exception e) {
             Log.e("YELLOW_SKY_REST_API", "POST method failed: " + e.getMessage());
             e.printStackTrace();
@@ -102,6 +112,11 @@ public class MemberTask {
 
             // Set the result
             result = builder.toString();
+
+            reader.close();
+            builder.setLength(0);
+            is.close();
+            conn.disconnect();
 
         } catch (Exception e) {
             Log.e("YELLOW_SKY_REST_API", "POST method failed: " + e.getMessage());
@@ -142,6 +157,11 @@ public class MemberTask {
             // Set the result
             result = builder.toString();
 
+            reader.close();
+            builder.setLength(0);
+            is.close();
+            conn.disconnect();
+
         } catch (Exception e) {
             Log.e("YELLOW_SKY_REST_API", "POST method failed: " + e.getMessage());
             e.printStackTrace();
@@ -178,6 +198,11 @@ public class MemberTask {
 
             // Set the result
             result = builder.toString();
+
+            reader.close();
+            builder.setLength(0);
+            is.close();
+            conn.disconnect();
 
         } catch (Exception e) {
             Log.e("YELLOW_SKY_REST_API", "POST method failed: " + e.getMessage());

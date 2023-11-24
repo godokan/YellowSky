@@ -39,6 +39,11 @@ public class MarkerInfoTask {
             // Set the result
             result = builder.toString();
             System.out.println(result);
+
+            reader.close();
+            builder.setLength(0);
+            is.close();
+            conn.disconnect();
         }
         catch (Exception e) {
             // Error calling the rest api
@@ -58,7 +63,6 @@ public class MarkerInfoTask {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return markers;
     }
 }
