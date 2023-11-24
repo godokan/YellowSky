@@ -1,5 +1,6 @@
 package com.godokan.yellowsky.Activity;
 
+import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,15 +14,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
     private GoogleMap mMap;
-
     private final MarkerInfoTask infoTask = new MarkerInfoTask();
+    Marker tempMarker = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
         List<ApiListMapDTO> list;
         InitNetMapList mapList = new InitNetMapList();
+
+        Geocoder geocoder = new Geocoder(this.getApplicationContext());
+        ApiListMapDTO mapDTO;
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2410864, 127.1775537), 11));
 
@@ -60,6 +66,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
 
+        mMap.setOnMapClickListener(this);
+
+    }
+
+    @Override
+    public void onMapClick(@NonNull LatLng point) {
+        if(tempMarker!=null)
+            tempMarker.remove();
+        tempMarker = mMap.addMarker(new MarkerOptions()
+                .position(point)
+                .title("새 장소"));
     }
 
     private class InitNetMapList extends Thread {
