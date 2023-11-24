@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity{
         Button btn_login = findViewById(R.id.btn_login);
         TextView tv_signup = findViewById(R.id.tv_signup);
 
+
+        // 로그인
         btn_login.setOnClickListener(view -> {
             String id = ed_id.getText().toString();
             String pw = ed_pw.getText().toString();
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+
+        // 회원가입
+
     }
 
     private class PostNetLogin extends Thread{
