@@ -1,4 +1,4 @@
-package com.godokan.yellowsky;
+package com.godokan.yellowsky.Activity;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -6,6 +6,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.godokan.yellowsky.Task.MemberTask;
+import com.godokan.yellowsky.R;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final MemberTask memberTask = new MemberTask();

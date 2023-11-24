@@ -1,4 +1,4 @@
-package com.godokan.yellowsky;
+package com.godokan.yellowsky.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.godokan.yellowsky.Task.MemberTask;
+import com.godokan.yellowsky.R;
 
 public class MainActivity extends AppCompatActivity{
 

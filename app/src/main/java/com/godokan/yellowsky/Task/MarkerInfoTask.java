@@ -1,6 +1,8 @@
-package com.godokan.yellowsky;
+package com.godokan.yellowsky.Task;
 
 import android.util.Log;
+
+import com.godokan.yellowsky.DTO.ApiListMapDTO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

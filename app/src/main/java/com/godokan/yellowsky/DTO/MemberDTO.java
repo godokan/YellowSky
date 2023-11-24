@@ -1,4 +1,4 @@
-package com.godokan.yellowsky;
+package com.godokan.yellowsky.DTO;
 
 public class MemberDTO {
     private Integer no;

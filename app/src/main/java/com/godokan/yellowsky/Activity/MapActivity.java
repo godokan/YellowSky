@@ -1,10 +1,13 @@
-package com.godokan.yellowsky;
+package com.godokan.yellowsky.Activity;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.godokan.yellowsky.DTO.ApiListMapDTO;
+import com.godokan.yellowsky.Task.MarkerInfoTask;
+import com.godokan.yellowsky.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
