@@ -55,7 +55,10 @@ public class MainActivity extends AppCompatActivity{
         });
 
         // 회원가입
-
+        tv_signup.setOnClickListener(view-> {
+            Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+            startActivity(intent);
+        });
     }
 
     private class PostNetLogin extends Thread{
