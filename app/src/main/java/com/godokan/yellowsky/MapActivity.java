@@ -18,7 +18,7 @@ import java.util.List;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 
-    private MarkerInfoTask infoTask = new MarkerInfoTask();
+    private final MarkerInfoTask infoTask = new MarkerInfoTask();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
