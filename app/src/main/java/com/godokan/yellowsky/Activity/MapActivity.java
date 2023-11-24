@@ -76,7 +76,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             tempMarker.remove();
         tempMarker = mMap.addMarker(new MarkerOptions()
                 .position(point)
-                .title("새 장소"));
+                .title("새 장소")
+                .snippet("여기를 눌러 새 장소를 등록 해 보세요!"));
     }
 
     private class InitNetMapList extends Thread {
