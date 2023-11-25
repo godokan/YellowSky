@@ -1,7 +1,9 @@
 package com.godokan.yellowsky.Activity;
 
+import android.app.AlertDialog;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
     private GoogleMap mMap;
     private final MarkerInfoTask infoTask = new MarkerInfoTask();
     Marker tempMarker = null;
@@ -66,18 +68,34 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
 
-        mMap.setOnMapClickListener(this);
+        mMap.setOnMapLongClickListener(this);
+
+        mMap.setOnInfoWindowClickListener(this);
 
     }
 
     @Override
-    public void onMapClick(@NonNull LatLng point) {
+    public void onMapLongClick(@NonNull LatLng point) {
         if(tempMarker!=null)
             tempMarker.remove();
         tempMarker = mMap.addMarker(new MarkerOptions()
                 .position(point)
                 .title("새 장소")
                 .snippet("여기를 눌러 새 장소를 등록 해 보세요!"));
+    }
+
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker) {
+        AlertDialog.Builder dlg = new AlertDialog.Builder(MapActivity.this);
+        if (marker.equals(tempMarker)) {
+            dlg.setTitle("새 장소 추가");
+            dlg.setMessage("새 장소를 추가 하시겠습니까?");
+            dlg.setNegativeButton("확인", (dialog, which) -> {
+
+            });
+            dlg.setPositiveButton("닫기", null);
+            dlg.show();
+        }
     }
 
     private class InitNetMapList extends Thread {
