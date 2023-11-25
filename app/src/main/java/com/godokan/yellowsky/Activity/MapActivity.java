@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -86,12 +89,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
+        // 이중 다이얼 로그 설계
+        // dlg : 입력 여부
+        // dlg2 : 내용 입력
+
         AlertDialog.Builder dlg = new AlertDialog.Builder(MapActivity.this);
+        AlertDialog.Builder dlg2 = new AlertDialog.Builder(MapActivity.this);
+
+        // dlg2에서 사용 할 뷰
+        View dialogView = View.inflate(MapActivity.this, R.layout.init_loc_data, null);
+        EditText name = dialogView.findViewById(R.id.ed_proper_name);
+        dlg2.setView(dialogView);
+
+        // 새 장소 입력의 경우
         if (marker.equals(tempMarker)) {
+            dlg2.setTitle("새 장소 이름 입력");
+            dlg2.setNegativeButton("확인", (dialogInterface, i) -> {
+                System.out.println(name.getText().toString());
+                System.out.println("HELLO??");
+            });
+            dlg2.setPositiveButton("닫기", null);
+
             dlg.setTitle("새 장소 추가");
             dlg.setMessage("새 장소를 추가 하시겠습니까?");
             dlg.setNegativeButton("확인", (dialog, which) -> {
-
+                dlg2.show();
             });
             dlg.setPositiveButton("닫기", null);
             dlg.show();
