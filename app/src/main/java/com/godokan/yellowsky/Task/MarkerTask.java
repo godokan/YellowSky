@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarkerInfoTask {
+public class MarkerTask {
 
     public List<ApiListMapDTO> getMarkerInfo() {
         String result = null;

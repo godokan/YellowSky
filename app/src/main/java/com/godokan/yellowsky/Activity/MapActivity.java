@@ -5,14 +5,12 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.godokan.yellowsky.DTO.ApiListMapDTO;
-import com.godokan.yellowsky.Task.MarkerInfoTask;
+import com.godokan.yellowsky.Task.MarkerTask;
 import com.godokan.yellowsky.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,7 +25,7 @@ import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
     private GoogleMap mMap;
-    private final MarkerInfoTask infoTask = new MarkerInfoTask();
+    private final MarkerTask infoTask = new MarkerTask();
     Marker tempMarker = null;
 
 
@@ -104,9 +102,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // 새 장소 입력의 경우
         if (marker.equals(tempMarker)) {
             dlg2.setTitle("새 장소 이름 입력");
-            dlg2.setNegativeButton("확인", (dialogInterface, i) -> {
-                System.out.println(name.getText().toString());
-                System.out.println("HELLO??");
+            dlg2.setNegativeButton("확인", (dialog, which) -> {
+
             });
             dlg2.setPositiveButton("닫기", null);
 
