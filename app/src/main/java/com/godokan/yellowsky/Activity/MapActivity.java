@@ -63,7 +63,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             for (ApiListMapDTO map : list) {
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(map.getLat(),map.getLng()))
-                        .title(map.getProperName())
+                        .title(map.getName())
                         .snippet(map.getAddress())
                 );
             }

@@ -3,6 +3,7 @@ package com.godokan.yellowsky.Task;
 import android.util.Log;
 
 import com.godokan.yellowsky.DTO.ApiListMapDTO;
+import com.kakao.vectormap.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -59,7 +60,7 @@ public class MarkerTask {
             JSONArray jArray = new JSONArray(result);
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject obj = jArray.getJSONObject(i);
-                mapDto = new ApiListMapDTO(obj.getInt("no"),obj.getString("name"),obj.getString("properName"),obj.getDouble("lat"),obj.getDouble("lng"),obj.getString("address"),obj.getString("placeUrl"));
+                mapDto = new ApiListMapDTO(obj.getInt("no"),obj.getString("name"),obj.getDouble("lat"),obj.getDouble("lng"),obj.getString("address"));
                 markers.add(mapDto);
             }
         } catch (Exception e) {
@@ -67,4 +68,7 @@ public class MarkerTask {
         }
         return markers;
     }
+
+    // 새 장소 추가
+//    public boolean postInitPlace(LatLng latLng, String proper_name, )
 }
