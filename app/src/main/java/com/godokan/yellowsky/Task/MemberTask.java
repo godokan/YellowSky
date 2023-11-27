@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class MemberTask {
     private final String  URL = "http://ccsyasu.cafe24.com:8082/";
 
-    // 로그린
+    // 로그인
     public boolean loginTask(String id, String pw) {
         String result = null;
         try {
@@ -56,8 +56,7 @@ public class MemberTask {
         return false;
     }
 
-    //TODO : 회원 가입 요청 작성
-
+    // 회원 가입
     public boolean signUpTask(String id, String pw, String name) {
         String result = null;
         try {
@@ -91,8 +90,6 @@ public class MemberTask {
 
         return false;
     }
-
-    //TODO : ID 중복 체크 로직
 
     // ID 확인 : 있으면 true, 없으면 false 반환
     public boolean validateID(String id) {
@@ -135,8 +132,6 @@ public class MemberTask {
         }
         return false;
     }
-
-    //TODO : 닉네임 중복 체크 로직
 
     // 닉네임 확인 : 있으면 true, 없으면 false 반환
     public boolean validateName(String name) {
@@ -181,6 +176,9 @@ public class MemberTask {
     }
 
     //TODO : 세션 유효 체크 로직
+
+    // 세션 확인 : 있으면 true, 없으면 false 반환
+    // * 대규모 로직 수정 필요 (HttpURLConnection 관련)
     public boolean checkSession() {
         String result = null;
         try {
