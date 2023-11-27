@@ -142,7 +142,7 @@ public class MemberTask {
     public boolean validateName(String name) {
         String result = null;
         try {
-            URL url = new URL(URL+"api/checkValidateName?name="+name);
+            URL url = new URL(URL+"api/chkValidateName?name="+name);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type","application/json;charset=UTF-8");
