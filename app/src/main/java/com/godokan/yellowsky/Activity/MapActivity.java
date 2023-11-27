@@ -1,10 +1,12 @@
 package com.godokan.yellowsky.Activity;
 
 import android.app.AlertDialog;
-import android.location.Geocoder;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +27,7 @@ import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
     private GoogleMap mMap;
-    private final MarkerTask infoTask = new MarkerTask();
+    private final MarkerTask markerTask = new MarkerTask();
     Marker tempMarker = null;
 
 
@@ -36,7 +38,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert mapFragment != null;
-        mapFragment.getMapAsync((OnMapReadyCallback) this);
+        mapFragment.getMapAsync(this);
     }
 
     // NULL이 아닌 GoogleMap 객체를 파라미터로 제공해 줄 수 있을 때 호출
@@ -45,9 +47,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
         List<ApiListMapDTO> list;
         InitNetMapList mapList = new InitNetMapList();
-
-        Geocoder geocoder = new Geocoder(this.getApplicationContext());
-        ApiListMapDTO mapDTO;
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2410864, 127.1775537), 11));
 
@@ -65,7 +64,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         .position(new LatLng(map.getLat(),map.getLng()))
                         .title(map.getName())
                         .snippet(map.getAddress())
-                );
+                ).setTag(map);
             }
         }
 
@@ -101,12 +100,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // 새 장소 입력의 경우
         if (marker.equals(tempMarker)) {
+            // 나중에 보여질 다이얼로그
             dlg2.setTitle("새 장소 이름 입력");
             dlg2.setNegativeButton("확인", (dialog, which) -> {
-
+                NewMapMarker newMapMarker = new NewMapMarker(this.getApplicationContext(), marker.getPosition(), name.getText().toString());
+                newMapMarker.start();
+                try {
+                    newMapMarker.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (newMapMarker.getResult()) {
+                    Toast.makeText(this.getApplicationContext(), "새 장소가 등록되었습니다.", Toast.LENGTH_LONG).show();
+                    finish();
+                    startActivity(new Intent(MapActivity.this, MapActivity.class));
+                } else {
+                    Toast.makeText(this.getApplicationContext(), "새 장소 등록에 실패하였습니다..", Toast.LENGTH_LONG).show();
+                }
             });
             dlg2.setPositiveButton("닫기", null);
 
+            // 먼저 보여질 다이얼로그
             dlg.setTitle("새 장소 추가");
             dlg.setMessage("새 장소를 추가 하시겠습니까?");
             dlg.setNegativeButton("확인", (dialog, which) -> {
@@ -114,6 +128,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             });
             dlg.setPositiveButton("닫기", null);
             dlg.show();
+        } else {
+            ApiListMapDTO map = (ApiListMapDTO) marker.getTag();
+            assert map != null;
+
         }
     }
 
@@ -121,11 +139,34 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         private List<ApiListMapDTO> markers = new ArrayList<>();
         @Override
         public void run() {
-            markers = infoTask.getMarkerInfo();
+            markers = markerTask.getMarkerInfo();
         }
 
         public List<ApiListMapDTO> getMarkers() {
             return markers;
+        }
+    }
+
+    private class NewMapMarker extends Thread {
+        private boolean result = false;
+
+        private Context context;
+        private LatLng latLng;
+        private String name;
+
+        public NewMapMarker(Context context, LatLng latLng, String name) {
+            this.context = context;
+            this.latLng = latLng;
+            this.name = name;
+        }
+
+        @Override
+        public void run() {
+            result = markerTask.postNewPlace(context, latLng, name);
+        }
+
+        public boolean getResult() {
+            return result;
         }
     }
 }
