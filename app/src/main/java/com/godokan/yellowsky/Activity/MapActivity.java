@@ -129,9 +129,63 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             dlg.setPositiveButton("닫기", null);
             dlg.show();
         } else {
+            AlertDialog.Builder dlg3 = new AlertDialog.Builder(MapActivity.this);
             ApiListMapDTO map = (ApiListMapDTO) marker.getTag();
             assert map != null;
             // TODO : 수정 및 삭제 로직 작성 할 것
+
+            // 나중에 보여질 다이얼로그 (수정)
+            dlg2.setTitle("새 장소 이름 입력");
+            dlg2.setNegativeButton("확인", (dialog, which) -> {
+                EditMapMarker editMapMarker = new EditMapMarker(this.getApplicationContext(), marker.getPosition(), name.getText().toString(), map.getNo());
+                editMapMarker.start();
+                try {
+                    editMapMarker.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (editMapMarker.getResult()) {
+                    Toast.makeText(this.getApplicationContext(), "장소 정보를 수정하였습니다.", Toast.LENGTH_LONG).show();
+                    finish();
+                    startActivity(new Intent(MapActivity.this, MapActivity.class));
+                } else {
+                    Toast.makeText(this.getApplicationContext(), "장소 수정에 실패하였습니다..", Toast.LENGTH_LONG).show();
+                }
+            });
+            dlg2.setPositiveButton("닫기", null);
+
+            // 나중에 보여질 다이얼로그 (수정)
+            dlg3.setTitle("정말로 삭제하시겠습니까?");
+            dlg3.setMessage("삭제한 정보는 되돌릴 수 없습니다.");
+            dlg3.setNegativeButton("확인", (dialog, which) -> {
+                DeleteMapMarker deleteMapMarker = new DeleteMapMarker(map.getNo());
+                deleteMapMarker.start();
+                try {
+                    deleteMapMarker.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if(deleteMapMarker.getResult()) {
+                    Toast.makeText(this.getApplicationContext(), "장소를 삭제하였습니다.", Toast.LENGTH_LONG).show();
+                    finish();
+                    startActivity(new Intent(MapActivity.this, MapActivity.class));
+                } else {
+                    Toast.makeText(this.getApplicationContext(), "장소 삭제에 실패하였습니다..", Toast.LENGTH_LONG).show();
+                }
+            });
+            dlg3.setPositiveButton("닫기", null);
+
+            // 먼저 보여질 다이얼로그
+            dlg.setTitle("장소 수정");
+            dlg.setMessage("장소 정보를 수정 하시겠습니까?");
+            dlg.setNegativeButton("수정", (dialog, which) -> {
+                dlg2.show();
+            });
+            dlg.setNeutralButton("삭제", (dialog, which) -> {
+                dlg3.show();
+            });
+            dlg.setPositiveButton("닫기", null);
+            dlg.show();
         }
     }
 
@@ -163,6 +217,49 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         @Override
         public void run() {
             result = markerTask.postNewPlace(context, latLng, name);
+        }
+
+        public boolean getResult() {
+            return result;
+        }
+    }
+
+    private class EditMapMarker extends Thread {
+        private boolean result = false;
+
+        private Context context;
+        private LatLng latLng;
+        private String name;
+        private Integer no;
+
+        public EditMapMarker(Context context, LatLng latLng, String name, Integer no) {
+            this.context = context;
+            this.latLng = latLng;
+            this.name = name;
+            this.no = no;
+        }
+
+        @Override
+        public void run() {
+            result = markerTask.patchEditPlace(context, latLng, name, no);
+        }
+
+        public boolean getResult() {
+            return result;
+        }
+    }
+
+    private class DeleteMapMarker extends Thread {
+        private boolean result = false;
+        private Integer no;
+
+        public DeleteMapMarker(Integer no) {
+            this.no = no;
+        }
+
+        @Override
+        public void run() {
+            result = markerTask.deletePlace(no);
         }
 
         public boolean getResult() {

@@ -121,4 +121,85 @@ public class MarkerTask {
 
         return result != null && result.equals("OK");
     }
+
+    public boolean patchEditPlace(Context context, LatLng latLng, String name, Integer no) {
+        String result = null;
+
+        // 위도 경도 정보로 주소 찾기
+        Geocoder geocoder = new Geocoder(context, Locale.KOREA);
+        List<Address> address;
+        String addr = "";
+        try {
+            address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            if (address != null && address.size() > 0) {
+                addr = address.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map/edit?name="+name+"&lat="+latLng.latitude+"&lng="+latLng.longitude+"&address="+addr+"&no="+no);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("PATCH");
+            conn.setRequestProperty("Content-Type","application/json;charset=UTF-8");
+            InputStream is = conn.getInputStream();
+            StringBuilder builder = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+
+            // Set the result
+            result = builder.toString();
+            System.out.println(result);
+
+            reader.close();
+            builder.setLength(0);
+            is.close();
+            conn.disconnect();
+        }
+        catch (Exception e) {
+            // Error calling the rest api
+            Log.e("REST_API", "GET method failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result != null && result.equals("OK");
+    }
+
+    public boolean deletePlace(Integer no) {
+        String result = null;
+
+        try {
+            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map/delete?no="+no);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Content-Type","application/json;charset=UTF-8");
+            InputStream is = conn.getInputStream();
+            StringBuilder builder = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+
+            // Set the result
+            result = builder.toString();
+            System.out.println(result);
+
+            reader.close();
+            builder.setLength(0);
+            is.close();
+            conn.disconnect();
+        }
+        catch (Exception e) {
+            // Error calling the rest api
+            Log.e("REST_API", "GET method failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result != null && result.equals("OK");
+    }
 }
