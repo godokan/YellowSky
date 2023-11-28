@@ -1,14 +1,9 @@
 package com.godokan.yellowsky.Activity;
 
-import static java.security.AccessController.getContext;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -16,8 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.godokan.yellowsky.DTO.ApiListMapDTO;
 import com.godokan.yellowsky.Task.MarkerTask;
@@ -44,29 +37,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_map);
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)== PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-        }
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
     }
 
-    // NULL이 아닌 GoogleMap 객체를 파라미터로 제공해 줄 수 있을 때 호출
+    // null 이 아닌 GoogleMap 객체를 파라미터로 제공해 줄 수 있을 때 호출
     @Override
     public void onMapReady(@NonNull final GoogleMap googleMap) {
         mMap = googleMap;
         List<ApiListMapDTO> list;
         InitNetMapList mapList = new InitNetMapList();
 
-        Location current = getGpsLocation();
 
         double[] lat_lng = getIntent().getDoubleArrayExtra("lat-lng");
         if (lat_lng!=null)
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat_lng[0], lat_lng[1]), 15));
-        else
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(current.getLatitude(), current.getLongitude()), 15));
 
         mapList.start();
         try {
@@ -141,16 +127,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // 먼저 보여질 다이얼로그
             dlg.setTitle("새 장소 추가");
             dlg.setMessage("새 장소를 추가 하시겠습니까?");
-            dlg.setNegativeButton("확인", (dialog, which) -> {
-                dlg2.show();
-            });
+            dlg.setNegativeButton("확인", (dialog, which) -> dlg2.show());
             dlg.setPositiveButton("닫기", null);
             dlg.show();
         } else {
             AlertDialog.Builder dlg3 = new AlertDialog.Builder(MapActivity.this);
             ApiListMapDTO map = (ApiListMapDTO) marker.getTag();
             assert map != null;
-            // TODO : 수정 및 삭제 로직 작성 할 것
 
             // 나중에 보여질 다이얼로그 (수정)
             dlg2.setTitle("새 장소 이름 입력");
@@ -168,12 +151,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     startActivity(new Intent(MapActivity.this, MapActivity.class).putExtra("lat-lng",new double[]{marker.getPosition().latitude, marker.getPosition().longitude}));
                 } else {
                     Toast.makeText(this.getApplicationContext(), "장소 수정에 실패하였습니다..", Toast.LENGTH_LONG).show();
+                    finish();
+                    startActivity(new Intent(MapActivity.this, MapActivity.class).putExtra("lat-lng",new double[]{marker.getPosition().latitude, marker.getPosition().longitude}));
                 }
             });
             dlg2.setPositiveButton("닫기", null);
 
             // 나중에 보여질 다이얼로그 (수정)
-            dlg3.setTitle("정말로 삭제하시겠습니까?");
+            dlg3.setTitle("정말로 삭제 하시겠습니까?");
             dlg3.setMessage("삭제한 정보는 되돌릴 수 없습니다.");
             dlg3.setNegativeButton("확인", (dialog, which) -> {
                 DeleteMapMarker deleteMapMarker = new DeleteMapMarker(map.getNo());
@@ -184,11 +169,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     throw new RuntimeException(e);
                 }
                 if(deleteMapMarker.getResult()) {
-                    Toast.makeText(this.getApplicationContext(), "장소를 삭제하였습니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.getApplicationContext(), "장소를 삭제 하였습니다.", Toast.LENGTH_LONG).show();
                     finish();
                     startActivity(new Intent(MapActivity.this, MapActivity.class).putExtra("lat-lng",new double[]{marker.getPosition().latitude, marker.getPosition().longitude}));
                 } else {
                     Toast.makeText(this.getApplicationContext(), "장소 삭제에 실패하였습니다..", Toast.LENGTH_LONG).show();
+                    finish();
+                    startActivity(new Intent(MapActivity.this, MapActivity.class).putExtra("lat-lng",new double[]{marker.getPosition().latitude, marker.getPosition().longitude}));
                 }
             });
             dlg3.setPositiveButton("닫기", null);
@@ -196,12 +183,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // 먼저 보여질 다이얼로그
             dlg.setTitle("장소 수정");
             dlg.setMessage("장소 정보를 수정 하시겠습니까?");
-            dlg.setNegativeButton("수정", (dialog, which) -> {
-                dlg2.show();
-            });
-            dlg.setNeutralButton("삭제", (dialog, which) -> {
-                dlg3.show();
-            });
+            dlg.setNegativeButton("수정", (dialog, which) -> dlg2.show());
+            dlg.setNeutralButton("삭제", (dialog, which) -> dlg3.show());
             dlg.setPositiveButton("닫기", null);
             dlg.show();
         }
@@ -222,9 +205,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private class NewMapMarker extends Thread {
         private boolean result = false;
 
-        private Context context;
-        private LatLng latLng;
-        private String name;
+        private final Context context;
+        private final LatLng latLng;
+        private final String name;
 
         public NewMapMarker(Context context, LatLng latLng, String name) {
             this.context = context;
@@ -245,8 +228,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private class EditMapMarker extends Thread {
         private boolean result = false;
 
-        private String name;
-        private ApiListMapDTO mapDTO;
+        private final String name;
+        private final ApiListMapDTO mapDTO;
 
         public EditMapMarker(String name, ApiListMapDTO mapDTO) {
             this.name = name;
@@ -265,7 +248,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private class DeleteMapMarker extends Thread {
         private boolean result = false;
-        private Integer no;
+        private final Integer no;
 
         public DeleteMapMarker(Integer no) {
             this.no = no;
@@ -279,15 +262,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public boolean getResult() {
             return result;
         }
-    }
-
-    private Location getGpsLocation() {
-        Location location = null;
-        LocationManager locationManager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED)
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        return location;
     }
 }
