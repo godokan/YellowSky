@@ -46,7 +46,6 @@ public class MarkerTask {
 
             // Set the result
             result = builder.toString();
-            System.out.println(result);
 
             reader.close();
             builder.setLength(0);
