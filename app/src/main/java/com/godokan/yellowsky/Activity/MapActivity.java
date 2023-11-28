@@ -1,8 +1,14 @@
 package com.godokan.yellowsky.Activity;
 
+import static java.security.AccessController.getContext;
+
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +16,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.godokan.yellowsky.DTO.ApiListMapDTO;
 import com.godokan.yellowsky.Task.MarkerTask;
@@ -36,6 +44,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_map);
 
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)== PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+        }
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
@@ -48,7 +60,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         List<ApiListMapDTO> list;
         InitNetMapList mapList = new InitNetMapList();
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2410864, 127.1775537), 11));
+        Location current = getGpsLocation();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(current.getLatitude(), current.getLongitude()), 18));
 
         mapList.start();
         try {
@@ -261,5 +275,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public boolean getResult() {
             return result;
         }
+    }
+
+    private Location getGpsLocation() {
+        Location location = null;
+        LocationManager locationManager = (LocationManager) this.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        return location;
     }
 }
