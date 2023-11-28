@@ -62,7 +62,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Location current = getGpsLocation();
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(current.getLatitude(), current.getLongitude()), 18));
+        double[] lat_lng = getIntent().getDoubleArrayExtra("lat-lng");
+        if (lat_lng!=null)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat_lng[0], lat_lng[1]), 15));
+        else
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(current.getLatitude(), current.getLongitude()), 15));
 
         mapList.start();
         try {
@@ -127,7 +131,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (newMapMarker.getResult()) {
                     Toast.makeText(this.getApplicationContext(), "새 장소가 등록되었습니다.", Toast.LENGTH_LONG).show();
                     finish();
-                    startActivity(new Intent(MapActivity.this, MapActivity.class));
+                    startActivity(new Intent(MapActivity.this, MapActivity.class).putExtra("lat-lng",new double[]{marker.getPosition().latitude, marker.getPosition().longitude}));
                 } else {
                     Toast.makeText(this.getApplicationContext(), "새 장소 등록에 실패하였습니다..", Toast.LENGTH_LONG).show();
                 }
@@ -161,7 +165,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (editMapMarker.getResult()) {
                     Toast.makeText(this.getApplicationContext(), "장소 정보를 수정하였습니다.", Toast.LENGTH_LONG).show();
                     finish();
-                    startActivity(new Intent(MapActivity.this, MapActivity.class));
+                    startActivity(new Intent(MapActivity.this, MapActivity.class).putExtra("lat-lng",new double[]{marker.getPosition().latitude, marker.getPosition().longitude}));
                 } else {
                     Toast.makeText(this.getApplicationContext(), "장소 수정에 실패하였습니다..", Toast.LENGTH_LONG).show();
                 }
@@ -182,7 +186,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if(deleteMapMarker.getResult()) {
                     Toast.makeText(this.getApplicationContext(), "장소를 삭제하였습니다.", Toast.LENGTH_LONG).show();
                     finish();
-                    startActivity(new Intent(MapActivity.this, MapActivity.class));
+                    startActivity(new Intent(MapActivity.this, MapActivity.class).putExtra("lat-lng",new double[]{marker.getPosition().latitude, marker.getPosition().longitude}));
                 } else {
                     Toast.makeText(this.getApplicationContext(), "장소 삭제에 실패하였습니다..", Toast.LENGTH_LONG).show();
                 }
