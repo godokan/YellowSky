@@ -137,7 +137,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // 나중에 보여질 다이얼로그 (수정)
             dlg2.setTitle("새 장소 이름 입력");
             dlg2.setNegativeButton("확인", (dialog, which) -> {
-                EditMapMarker editMapMarker = new EditMapMarker(this.getApplicationContext(), marker.getPosition(), name.getText().toString(), map.getNo());
+                EditMapMarker editMapMarker = new EditMapMarker(name.getText().toString(), map);
                 editMapMarker.start();
                 try {
                     editMapMarker.join();
@@ -227,21 +227,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private class EditMapMarker extends Thread {
         private boolean result = false;
 
-        private Context context;
-        private LatLng latLng;
         private String name;
-        private Integer no;
+        private ApiListMapDTO mapDTO;
 
-        public EditMapMarker(Context context, LatLng latLng, String name, Integer no) {
-            this.context = context;
-            this.latLng = latLng;
+        public EditMapMarker(String name, ApiListMapDTO mapDTO) {
             this.name = name;
-            this.no = no;
+            this.mapDTO = mapDTO;
         }
 
         @Override
         public void run() {
-            result = markerTask.patchEditPlace(context, latLng, name, no);
+            result = markerTask.patchEditPlace(name, mapDTO);
         }
 
         public boolean getResult() {

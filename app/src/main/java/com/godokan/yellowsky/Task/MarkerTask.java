@@ -122,24 +122,11 @@ public class MarkerTask {
         return result != null && result.equals("OK");
     }
 
-    public boolean patchEditPlace(Context context, LatLng latLng, String name, Integer no) {
+    public boolean patchEditPlace(String name, ApiListMapDTO mapDTO) {
         String result = null;
 
-        // 위도 경도 정보로 주소 찾기
-        Geocoder geocoder = new Geocoder(context, Locale.KOREA);
-        List<Address> address;
-        String addr = "";
         try {
-            address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-            if (address != null && address.size() > 0) {
-                addr = address.get(0).getAddressLine(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map/edit?name="+name+"&lat="+latLng.latitude+"&lng="+latLng.longitude+"&address="+addr+"&no="+no);
+            URL url = new URL("http://ccsyasu.cafe24.com:81/api/map/edit?name="+name+"&lat="+mapDTO.getLat()+"&lng="+mapDTO.getLng()+"&address="+mapDTO.getAddress()+"&no="+mapDTO.getNo());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("PATCH");
             conn.setRequestProperty("Content-Type","application/json;charset=UTF-8");
